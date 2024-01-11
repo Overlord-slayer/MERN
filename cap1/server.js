@@ -1,7 +1,24 @@
 const express = require('express')
-const path = require('path')
+const path = require('path') // Para trabajar con rutas de archivos
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
+
+const { logger } = require('./middleware/logger')
+const errorHandler = require('./middleware/errorHandler')
+
+const corsOptions = require('./config/corsOptions')
 
 const app = express()
+
+app.use(logger)
+
+// Habilita el middleware de CORS con configuración predeterminada
+app.use(cors(corsOptions))
+
+// Middleware para parsear el cuerpo de las solicitudes como JSON
+app.use(express.json())
+
+app.use(cookieParser())
 
 // Define el puerto en el que el servidor escuchará, usando el puerto proporcionado por el entorno o el puerto 3500 por defecto
 const PORT = process.env.PORT || 3500
@@ -28,5 +45,7 @@ app.all('*', (req, res) => {
     res.type('txt').send('404')
   }
 })
+
+app.use(errorHandler)
 
 app.listen(PORT, () => console.log(`Ejecución del Servidor en el purto ${PORT}`))
