@@ -7,7 +7,7 @@ const app = express()
 const PORT = process.env.PORT || 3500
 
 // Configura Express para servir archivos estáticos desde el directorio 'public' en la raíz del proyecto
-app.use('/', express.static(path.join(__dirname, '/public')))
+app.use('/', express.static(path.join(__dirname, 'public'))) // no es necesario el /public, solo public basta
 
 // Configura Express para usar las rutas definidas en el archivo './routes/root' cuando la solicitud está en la raíz ('/')
 app.use('/', require('./routes/root'))
