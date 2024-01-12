@@ -1,15 +1,26 @@
+// Carga y configura las variables de entorno desde un archivo .env utilizando dotenv
+require('dotenv').config()
+
 const express = require('express')
 const path = require('path') // Para trabajar con rutas de archivos
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const mongoose = require('mongoose')
 
-const { logger } = require('./middleware/logger')
+const { logger, logEvents } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
 
 const corsOptions = require('./config/corsOptions')
 
+const connectDB = require('./config/dbConn')
+
+
 const app = express()
 
+// Conecta a la base de datos utilizando la función definida en './config/dbConn'
+connectDB()
+
+// Utiliza el middleware de registro definido en './middleware/logger'
 app.use(logger)
 
 // Habilita el middleware de CORS con configuración predeterminada
@@ -18,6 +29,7 @@ app.use(cors(corsOptions))
 // Middleware para parsear el cuerpo de las solicitudes como JSON
 app.use(express.json())
 
+// Utiliza el middleware de cookies
 app.use(cookieParser())
 
 // Define el puerto en el que el servidor escuchará, usando el puerto proporcionado por el entorno o el puerto 3500 por defecto
@@ -46,6 +58,19 @@ app.all('*', (req, res) => {
   }
 })
 
+// Utiliza el middleware de manejo de errores definido en './middleware/errorHandler'
 app.use(errorHandler)
 
-app.listen(PORT, () => console.log(`Ejecución del Servidor en el purto ${PORT}`))
+// Maneja el evento 'open' de la conexión a MongoDB
+mongoose.connection.on('open', () => {
+  console.log('Conectado a mongoDB')
+  // Inicia el servidor Express una vez que la conexión a MongoDB está abierta
+  app.listen(PORT, () => console.log(`Ejecución del Servidor en el purto ${PORT}`))
+})
+
+// Maneja el evento 'error' de la conexión a MongoDB
+mongoose.connection.on('error', err => {
+  console.log(err)
+   // Registra el error en un archivo de registro utilizando la función definida en './middleware/logger'
+  logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
+})
