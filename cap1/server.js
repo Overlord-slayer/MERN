@@ -41,6 +41,9 @@ app.use('/', express.static(path.join(__dirname, 'public'))) // no es necesario 
 // Configura Express para usar las rutas definidas en el archivo './routes/root' cuando la solicitud está en la raíz ('/')
 app.use('/', require('./routes/root'))
 
+app.use('/users',require('./routes/userRoutes'))
+
+// Muestra el error, para cualquier ruta que no coincida/exista
 app.all('*', (req, res) => {
   // Establece el código de estado de la respuesta HTTP a 404 (Not Found)
   res.status(404)
