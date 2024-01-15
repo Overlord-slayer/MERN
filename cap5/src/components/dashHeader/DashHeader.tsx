@@ -4,7 +4,7 @@ export default function DashHeader() {
   const content = (
     <header>
       <div>
-        <Link to="/dash/notes">
+        <Link to="/dash">
           <h1 className="dash-header__title">techNotes</h1>
         </Link>
         <nav className="dash-header__nav">

@@ -8,6 +8,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
+          {/* Ruta principal que renderiza el componente App */}
         <Route path="/*" element={<App />} />
       </Routes>
     </BrowserRouter>

@@ -25,7 +25,8 @@
     "paths": {
       "@components/*": ["components/*"],
       "@routes/*": ["routes/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@features/*": ["features/*"]
     },
     
     "types": ["node"],
